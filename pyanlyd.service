@@ -1,0 +1,21 @@
+[Unit]
+Description=Market Analysis Service in Python
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=analyzer
+WorkingDirectory=/opt/market-analysis
+
+Environment=FLASK_APP=sentiment_analyzer
+Environment=FLASK_ENV=development
+Environment=PATH=/opt/market-analysis/venv/bin:$PATH
+Environment=PYTHON_HOME=/opt/market-analysis/venv
+
+ExecStart=/opt/market-analysis/venv/bin/python3 /opt/market-analysis/venv/bin/flask run --port 8080 --host 0.0.0.0
+
+[Install]
+WantedBy=multi-user.target

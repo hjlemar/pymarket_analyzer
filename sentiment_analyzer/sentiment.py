@@ -1,7 +1,6 @@
 from textblob import TextBlob 
-from sentiment_analyzer import cache
 import re
-from statistics import mean
+from sentiment_analyzer.cache import sentiment_cache
 
 def clean_str(string): 
     ''' 
@@ -27,12 +26,12 @@ def get_max_sentiment(*strings):
 def determine_store_sentiment(item):
   ticker, news_item = item
   ticker = ticker.lower()
-  if cache.has_been_processed(ticker,news_item['datetime']):
+  if sentiment_cache.has_been_processed(ticker,news_item['datetime']):
     print("Ticker has been seen with timestamp {} {}".format(ticker,news_item['datetime']))
     return
 
   sentiment = get_max_sentiment(news_item['headline'],news_item['summary'])
-  cache.save_series(sentiment=sentiment, ticker=ticker, timestamp=news_item['datetime'])
+  sentiment_cache.save_series(sentiment=sentiment, ticker=ticker, timestamp=news_item['datetime'])
 
 if __name__ == '__main__':
   print(get_max_sentiment("I am very sad today!","I am very happy today!"))

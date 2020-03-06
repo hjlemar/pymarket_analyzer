@@ -5,7 +5,7 @@ import json
 from flask_restx import Resource, fields
 
 from sentiment_analyzer.work_queue import sentiment_wq
-from sentiment_analyzer.cache import get_series
+from sentiment_analyzer.cache import sentiment_cache
 
 
 news_model = api.model('Resource', {
@@ -44,7 +44,7 @@ class SentimentAnalysis(Resource):
   
   #@api.doc(body=series_data)
   def get(self, ticker):
-    return jsonify(get_series(ticker))
+    return jsonify(sentiment_cache.get_series(ticker))
 
 
 # @api.route('/global')

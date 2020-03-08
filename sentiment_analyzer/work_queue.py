@@ -1,10 +1,7 @@
 import queue
 import threading
 
-from sentiment_analyzer.sentiment import determine_store_sentiment
-
-q = queue.Queue()
-threads = []
+from sentiment_analyzer.sentiment import TickerSentiment,GlobalNewsSentiment
 
 class WorkQueue:
 
@@ -40,8 +37,8 @@ class WorkQueue:
           self.q.task_done()
 
 
-sentiment_wq = WorkQueue(callable=determine_store_sentiment, threads=3)
+sentiment_wq = WorkQueue(callable=TickerSentiment(), nthreads=3)
 sentiment_wq.run()
 
-# global_wq = WorkQueue(callable=global_worker, threads=3)
-# global_wq.run()
+global_wq = WorkQueue(callable=GlobalNewsSentiment(), nthreads=3)
+global_wq.run()

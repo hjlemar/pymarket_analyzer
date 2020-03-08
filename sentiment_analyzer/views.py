@@ -4,8 +4,8 @@ from sentiment_analyzer import api
 import json
 from flask_restx import Resource, fields
 
-from sentiment_analyzer.work_queue import sentiment_wq
-from sentiment_analyzer.cache import sentiment_cache
+from sentiment_analyzer.work_queue import sentiment_wq, global_wq
+from sentiment_analyzer.cache import SentimentCache, GlobalNewsSentimentCache
 
 
 news_model = api.model('Resource', {
@@ -44,27 +44,27 @@ class SentimentAnalysis(Resource):
   
   #@api.doc(body=series_data)
   def get(self, ticker):
-    return jsonify(sentiment_cache.get_series(ticker))
+    return jsonify(SentimentCache().get_series(ticker))
 
 
-# @api.route('/global')
-# class SentimentAnalysis(Resource):
+@api.route('/global')
+class GlobalAnalysis(Resource):
 
-#   @api.doc(body=news_model)
-#   def post(self):
+  @api.doc(body=news_model)
+  def post(self):
     
-#       # queue job
-#       print(request)
+      # queue job
+      print(request)
 
-#       news = json.loads(request.data)
-#       if news is None:
-#         # errror somehow
-#         pass
-#       enqueue_sentiment_task(ticker,news)
-#       return Response(status=201)
+      news = json.loads(request.data)
+      if news is None:
+        # errror somehow
+        pass
+      global_wq.enqueue(news)
+      return Response(status=201)
   
-#   def get(self):
-#     return jsonify(get_series(ticker))
+  def get(self):
+    return jsonify(GlobalNewsSentimentCache().get_series())
       
 
       

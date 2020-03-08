@@ -7,6 +7,11 @@ app = Flask(__name__)
 app.config.from_object('config')
 api = Api(app)
 
+from sentiment_analyzer.cache import setup_influx
+
+print("Initializing influxDB")
+setup_influx()
+print("Finished initializing influxDB")
 
 import sentiment_analyzer.views
 
